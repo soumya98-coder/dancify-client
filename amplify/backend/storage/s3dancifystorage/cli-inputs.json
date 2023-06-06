@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3dancifystorage",
+  "bucketName": "dancify-storage",
+  "policyUUID": "7943497f",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

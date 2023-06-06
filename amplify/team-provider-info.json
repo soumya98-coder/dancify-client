@@ -1,0 +1,26 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-dancify-staging-173619-authRole",
+      "UnauthRoleArn": "arn:aws:iam::502698982736:role/amplify-dancify-staging-173619-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::502698982736:role/amplify-dancify-staging-173619-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-dancify-staging-173619-deployment",
+      "UnauthRoleName": "amplify-dancify-staging-173619-unauthRole",
+      "StackName": "amplify-dancify-staging-173619",
+      "StackId": "arn:aws:cloudformation:ap-south-1:502698982736:stack/amplify-dancify-staging-173619/007c7f20-f347-11ed-9a11-0ac236a89830",
+      "AmplifyAppId": "dfbokab9p2f7a"
+    },
+    "categories": {
+      "auth": {
+        "dancify": {}
+      },
+      "api": {
+        "dancify": {}
+      },
+      "storage": {
+        "s3dancifystorage": {}
+      }
+    }
+  }
+}

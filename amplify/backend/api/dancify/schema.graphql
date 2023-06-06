@@ -1,0 +1,148 @@
+type Awward @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  date: AWSDate
+  title: String
+  description: String
+  studioID: ID! @index(name: "byStudio")
+}
+
+type FAQ @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  question: String
+  answe: String
+  studioID: ID! @index(name: "byStudio")
+}
+
+type StudentSubscrption @model @auth(rules: [{allow: public}, {allow: owner}]) {
+  id: ID!
+  startDateTime: AWSDateTime!
+  endDateTime: AWSDateTime!
+  userID: ID! @index(name: "byUser")
+  subscriptionplanID: ID! @index(name: "bySubscriptionPlan")
+  SubscriptionPlan: SubscriptionPlan! @belongsTo(fields: ["subscriptionplanID"])
+  User: User! @belongsTo(fields: ["userID"])
+}
+
+type SubscriptionPlan @model @auth(rules: [{allow: public}, {allow: owner}]) {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  discountedPrice: Float!
+  maxAllowedClasses: Int!
+  danceStyles: [DanceStyle!]
+  durationInDays: Int!
+  studioID: ID! @index(name: "byStudio")
+  Studio: Studio! @belongsTo(fields: ["studioID"])
+  StudentSubscrptions: [StudentSubscrption] @hasMany(indexName: "bySubscriptionPlan", fields: ["id"])
+}
+
+enum ClassType {
+  ONLINE
+  OFFLINE
+}
+
+enum PaymentType {
+  CASH
+  RAZORPAY
+  SUBSCRIPTION
+}
+
+type Booking @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  isAttended: Boolean!
+  paymentType: PaymentType
+  userID: ID! @index(name: "byUser")
+  classID: ID! @index(name: "byClass")
+  Class: Class! @belongsTo(fields: ["classID"])
+  User: User! @belongsTo(fields: ["userID"])
+}
+
+type Class @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  description: String!
+  startDateTime: AWSDateTime!
+  endDateTime: AWSDateTime!
+  price: Float!
+  danceStyles: [DanceStyle!]!
+  classCapacity: Int!
+  classType: ClassType!
+  studioID: ID! @index(name: "byStudio")
+  Studio: Studio! @belongsTo(fields: ["studioID"])
+  Bookings: [Booking] @hasMany(indexName: "byClass", fields: ["id"])
+  users: [User] @manyToMany(relationName: "UserClass")
+}
+
+enum DanceStyle {
+  HIPHOP
+  POPPING
+  HOUSE
+  BREAKING
+  FREESTYLE
+  JAZZ
+  ZUMBA
+  CONTEMPORARY
+}
+
+type Studio @model @auth(rules: [{allow: public}, {allow: owner}]) {
+  id: ID!
+  name: String!
+  details: String!
+  Location: Location! @hasOne
+  featuredImage: String!
+  Creatives: [Creative] @hasMany(indexName: "byStudio", fields: ["id"])
+  danceStyles: [DanceStyle]
+  userID: ID! @index(name: "byUser")
+  User: User! @belongsTo(fields: ["userID"])
+  SubscriptionPlans: [SubscriptionPlan] @hasMany(indexName: "byStudio", fields: ["id"])
+  Classes: [Class] @hasMany(indexName: "byStudio", fields: ["id"])
+  facilities: [String]
+  phone: AWSPhone
+  email: AWSEmail
+  facebook: AWSURL
+  instagram: AWSURL
+  youtube: AWSURL
+  FAQS: [FAQ] @hasMany(indexName: "byStudio", fields: ["id"])
+  Awwards: [Awward] @hasMany(indexName: "byStudio", fields: ["id"])
+}
+
+enum CreativeType {
+  IMAGE
+  VIDEO
+}
+
+type Creative @model @auth(rules: [{allow: public}, {allow: owner}]) {
+  id: ID!
+  type: CreativeType!
+  description: String
+  link: String!
+  studioID: ID! @index(name: "byStudio")
+}
+
+type Location @model @auth(rules: [{allow: public}, {allow: owner}]) {
+  id: ID!
+  pincode: String!
+  country: String!
+  state: String!
+  district: String!
+  city: String!
+  landmark: String!
+  lineone: String!
+  linetwo: String!
+}
+
+type User @model @auth(rules: [{allow: public}, {allow: owner}]) {
+  id: ID!
+  name: String!
+  email: AWSEmail
+  mobile: AWSPhone
+  birthDate: AWSDate
+  profilePicture: String
+  danceStyles: [DanceStyle]
+  StudentSubscrptions: [StudentSubscrption] @hasMany(indexName: "byUser", fields: ["id"])
+  Bookings: [Booking] @hasMany(indexName: "byUser", fields: ["id"])
+  Studios: [Studio] @hasMany(indexName: "byUser", fields: ["id"])
+  Classes: [Class] @manyToMany(relationName: "UserClass")
+}
+ 
